@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Twitter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <h1>Twitter</h1>
-    <form id="send-tweet">
-        <input type="text" id="tweet" />
-        <input type="submit" value="Go" />
-    </form>
-    <ul id="timeline"></ul>
+    <div id="grid">
+        <div id="left">
+            <h1>Twitter</h1>
+        </div>
+        <div class="divider"></div>
+        <div id="center">
+            <h2>Home</h2>
+            <form id="send-tweet">
+                <textarea id="tweet" placeholder="What's happening?"></textarea>
+                <button type="submit" id="compose">Tweet</button>
+            </form>
+            <ul id="timeline"></ul>
+        </div>
+        <div class="divider"></div>
+        <div id="right"></div>
+    </div>
     <script src="scripts.js"></script>
 </body>
 </html>

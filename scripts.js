@@ -17,6 +17,7 @@ function processForm(e) {
     // clear the input box
     tweet.value = '';
 
+    // don't reload the page
     return false;
 }
 
