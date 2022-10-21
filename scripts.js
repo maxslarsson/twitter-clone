@@ -1,25 +1,96 @@
-function processForm(e) {
-    e.preventDefault();
-    console.log(e);
+// select the form
+const form = document.querySelector('#send-tweet');
+// select the text area
+const tweetInput = document.querySelector('#tweet');
+// select the <ul> with all the tweets
+const tweetList = document.querySelector('#timeline');
 
-    // store the thing that was typed
-    const tweet = document.getElementById("tweet");
+// array which stores all the tweets
+let tweets = [];
 
-    // return false if the tweet is empty
-    if (tweet.value === '') return false;
+function renderTweets() {
+    // clear everything inside the timeline
+    tweetList.innerHTML = '';
 
-    // show the tweet in our timeline
-    const ul = document.getElementById("timeline");
-    const li = document.createElement('li');
-    li.innerText = tweet.value;
-    ul.appendChild(li);
+    // run through each tweet in tweets
+    tweets.forEach(function(tweet, index) {
+        const li = document.createElement('li');
+        li.classList.add('tweet-card');
+        li.setAttribute('data-index', index);
 
-    // clear the input box
-    tweet.value = '';
+        const text = document.createElement('p');
+        const removeButton = document.createElement('i');
+        removeButton.classList.add("gg-trash");
+        removeButton.addEventListener("click", deleteTweet);
 
-    // don't reload the page
-    return false;
+        text.innerText = tweet;
+
+        li.appendChild(text);
+        li.appendChild(removeButton);
+        tweetList.append(li);
+    })
 }
 
-const form = document.getElementById("send-tweet");
-form.addEventListener("submit", processForm);
+// function to save tweets to local storage
+function saveTweets() {
+    // convert the array to a string then save it.
+    localStorage.setItem('tweets', JSON.stringify(tweets));
+}
+
+// function to load tweets from local storage
+function loadTweets() {
+    const reference = localStorage.getItem('tweets');
+    // if reference exists
+    if (reference) {
+        // convert the string back to an array and store it in the tweets array
+        tweets = JSON.parse(reference);
+    }
+}
+
+// function called on click that deletes a tweet
+function deleteTweet(event) {
+    const index = event.target.parentElement.getAttribute('data-index')
+
+    // filters out the <li> with the id and updates the tweets array
+    tweets.splice(index, 1);
+
+    // save the tweets to the localStorage
+    saveTweets()
+
+    // rerender the tweets
+    renderTweets()
+}
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const tweetText = tweetInput.value;
+
+    if (tweetText !== '') {
+        // then add it to the list of tweets
+        tweets.push(tweetText);
+
+        // render all tweets in the timeline
+        saveTweets();
+        renderTweets();
+
+        // clear the input box
+        tweetInput.value = '';
+    }
+});
+
+// Be able to submit the form (post a tweet) by pressing Command+Enter in the textarea
+tweetInput.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && e.metaKey) {
+        // Don't generate a new line
+        e.preventDefault();
+
+        // Instead submit the form
+        form.requestSubmit();
+    }
+});
+
+window.addEventListener("load", function(e) {
+    loadTweets()
+    renderTweets()
+});
